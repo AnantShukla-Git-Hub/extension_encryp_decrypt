@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AnantCrypt Icon Generator</title>
+</head>
+<body>
+  <h2>AnantCrypt - Generate Extension Icons</h2>
+  <p>by Anant Shukla</p>
+  <p>Open this file in a browser, then right-click each canvas and "Save image as..."</p>
+  
+  <div>
+    <h3>icon16.png</h3>
+    <canvas id="icon16" width="16" height="16"></canvas>
+  </div>
+  
+  <div>
+    <h3>icon48.png</h3>
+    <canvas id="icon48" width="48" height="48"></canvas>
+  </div>
+  
+  <div>
+    <h3>icon128.png</h3>
+    <canvas id="icon128" width="128" height="128"></canvas>
+  </div>
+
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      
+      // Lock icon
+      ctx.fillStyle = 'white';
+      const lockSize = size * 0.6;
+      const x = (size - lockSize) / 2;
+      const y = (size - lockSize) / 2;
+      
+      // Lock body
+      ctx.fillRect(x + lockSize * 0.2, y + lockSize * 0.4, lockSize * 0.6, lockSize * 0.5);
+      
+      // Lock shackle
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = size * 0.08;
+      ctx.beginPath();
+      ctx.arc(x + lockSize / 2, y + lockSize * 0.35, lockSize * 0.25, Math.PI, 0, true);
+      ctx.stroke();
+    }
+    
+    drawIcon('icon16', 16);
+    drawIcon('icon48', 48);
+    drawIcon('icon128', 128);
+  </script>
+</body>
+</html>

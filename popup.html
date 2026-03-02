@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnantCrypt</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 AnantCrypt</h1>
+    <p class="subtitle">by Anant Shukla</p>
+    
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="text">📝 Text</button>
+      <button class="tab-btn" data-tab="file">📁 Files</button>
+    </div>
+    
+    <!-- Text Tab -->
+    <div id="text-tab" class="tab-content active">
+      <div class="input-group">
+        <label for="inputText">Enter Text:</label>
+        <textarea id="inputText" placeholder="Type your text here..." rows="5"></textarea>
+      </div>
+      
+      <div class="input-group">
+        <label for="keyInput">Encryption Key:</label>
+        <input type="number" id="keyInput" placeholder="Enter a numeric key (e.g., 5)" value="5">
+      </div>
+      
+      <div class="button-group">
+        <button id="encryptBtn" class="btn btn-primary">🔒 Encrypt</button>
+        <button id="decryptBtn" class="btn btn-secondary">🔓 Decrypt</button>
+        <button id="clearBtn" class="btn btn-clear">🗑️ Clear</button>
+      </div>
+      
+      <div class="input-group">
+        <label for="outputText">Result:</label>
+        <textarea id="outputText" placeholder="Result will appear here..." rows="5" readonly></textarea>
+      </div>
+      
+      <button id="copyBtn" class="btn btn-copy">📋 Copy Result</button>
+    </div>
+    
+    <!-- File Tab -->
+    <div id="file-tab" class="tab-content">
+      <div class="file-section">
+        <div class="input-group">
+          <label for="fileInput">Select File:</label>
+          <div class="file-input-wrapper">
+            <input type="file" id="fileInput" accept="*/*">
+            <div class="file-info" id="fileInfo">No file selected</div>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="fileKeyInput">Encryption Key:</label>
+          <input type="number" id="fileKeyInput" placeholder="Enter a numeric key (e.g., 5)" value="5">
+        </div>
+        
+        <div class="button-group">
+          <button id="encryptFileBtn" class="btn btn-primary">🔒 Encrypt File</button>
+          <button id="decryptFileBtn" class="btn btn-secondary">🔓 Decrypt File</button>
+        </div>
+        
+        <div class="progress-bar" id="progressBar" style="display: none;">
+          <div class="progress-fill" id="progressFill"></div>
+          <span class="progress-text" id="progressText">0%</span>
+        </div>
+        
+        <div class="file-result" id="fileResult"></div>
+      </div>
+    </div>
+    
+    <div class="info">
+      <p>ℹ️ <strong>Text:</strong> Encrypts letters (a-z, A-Z), digits (0-9), and symbols/emojis. Spaces preserved.</p>
+      <p>ℹ️ <strong>Files:</strong> Encrypted files get .enc extension. Decrypted files restore original name!</p>
+      <p>⚠️ Use the same key for encryption and decryption!</p>
+      <p style="margin-top: 10px; font-size: 10px; color: #999;">Created by Anant Shukla</p>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
