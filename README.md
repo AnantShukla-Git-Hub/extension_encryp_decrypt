@@ -2,7 +2,23 @@
 
 by Anant Shukla
 
-A browser extension for text and file encryption/decryption. Works completely offline, no signup required!
+A text and file encryption tool. Works completely offline, no signup required!
+
+## 🚀 Two Ways to Use
+
+### Option 1: Standalone Website (Easiest!) ⭐
+**Just download one file and open it!**
+
+1. Download `index.html`
+2. Double-click to open in your browser
+3. Start encrypting!
+
+**No installation, no setup, works instantly!**
+
+### Option 2: Browser Extension
+Install as a browser extension for quick access from toolbar.
+
+See installation instructions below.
 
 ## ✨ Features
 
@@ -14,7 +30,17 @@ A browser extension for text and file encryption/decryption. Works completely of
 
 ## 🚀 Installation
 
-### Step 1: Create Icons (2 minutes)
+### Standalone Website (Recommended for most users)
+
+1. Download `index.html` from this repository
+2. Double-click the file to open in your browser
+3. Done! Start encrypting immediately
+
+**No installation required!**
+
+### Browser Extension (For toolbar access)
+
+#### Step 1: Create Icons (2 minutes)
 
 1. Open `create-icons.html` in your browser
 2. Right-click each canvas and "Save image as...":

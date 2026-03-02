@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnantCrypt - Text & File Encryption</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 32px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    h1 {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 4px;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: #f3f4f6;
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .tab-btn:hover {
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #374151;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+
+    textarea, input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #ffffff;
+    }
+
+    textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 13px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      flex: 0.5;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-copy {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+
+    input[type="file"] {
+      border: 2px dashed #3b82f6;
+      cursor: pointer;
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    input[type="file"]:hover {
+      border-color: #2563eb;
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .file-info {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #6b7280;
+      min-height: 44px;
+      border-left: 4px solid #3b82f6;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      position: relative;
+      width: 100%;
+      height: 36px;
+      background: #e5e7eb;
+      border-radius: 18px;
+      overflow: hidden;
+      margin: 18px 0;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+      border-radius: 18px;
+      width: 0%;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #374151;
+      font-weight: 700;
+      font-size: 13px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .file-result {
+      margin-top: 18px;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid #10b981;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .success-message p {
+      color: #065f46;
+      font-weight: 700;
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    .info {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      padding: 14px 16px;
+      border-radius: 10px;
+      border-left: 4px solid #3b82f6;
+      margin-top: 18px;
+    }
+
+    .info p {
+      font-size: 11px;
+      color: #1e40af;
+      line-height: 1.7;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .info p:last-child {
+      margin-bottom: 0;
+    }
+
+    #outputText {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border-color: #d1d5db;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      opacity: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    .notification.show {
+      opacity: 1;
+    }
+
+    .notification.success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .notification.error {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 AnantCrypt</h1>
+    <p class="subtitle">by Anant Shukla</p>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="text">📝 Text</button>
+      <button class="tab-btn" data-tab="file">📁 Files</button>
+    </div>
+    
+    <div id="text-tab" class="tab-content active">
+      <div class="input-group">
+        <label for="inputText">Enter Text:</label>
+        <textarea id="inputText" placeholder="Type your text here..." rows="5"></textarea>
+      </div>
+      
+      <div class="input-group">
+        <label for="keyInput">Encryption Key:</label>
+        <input type="number" id="keyInput" placeholder="Enter a numeric key (e.g., 5)" value="5">
+      </div>
+      
+      <div class="button-group">
+        <button id="encryptBtn" class="btn btn-primary">🔒 Encrypt</button>
+        <button id="decryptBtn" class="btn btn-secondary">🔓 Decrypt</button>
+        <button id="clearBtn" class="btn btn-clear">🗑️ Clear</button>
+      </div>
+      
+      <div class="input-group">
+        <label for="outputText">Result:</label>
+        <textarea id="outputText" placeholder="Result will appear here..." rows="5" readonly></textarea>
+      </div>
+      
+      <button id="copyBtn" class="btn btn-copy">📋 Copy Result</button>
+    </div>
+    
+    <div id="file-tab" class="tab-content">
+      <div class="input-group">
+        <label for="fileInput">Select File:</label>
+        <input type="file" id="fileInput">
+        <div class="file-info" id="fileInfo">No file selected</div>
+      </div>
+      
+      <div class="input-group">
+        <label for="fileKeyInput">Encryption Key:</label>
+        <input type="number" id="fileKeyInput" placeholder="Enter a numeric key (e.g., 5)" value="5">
+      </div>
+      
+      <div class="button-group">
+        <button id="encryptFileBtn" class="btn btn-primary">🔒 Encrypt File</button>
+        <button id="decryptFileBtn" class="btn btn-secondary">🔓 Decrypt File</button>
+      </div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+        <span class="progress-text" id="progressText">0%</span>
+      </div>
+      
+      <div class="file-result" id="fileResult"></div>
+    </div>
+    
+    <div class="info">
+      <p>ℹ️ <strong>Text:</strong> Encrypts letters (a-z, A-Z), digits (0-9), and symbols/emojis. Spaces preserved.</p>
+      <p>ℹ️ <strong>Files:</strong> Encrypted files get .enc extension. Decrypted files restore original name!</p>
+      <p>⚠️ Use the same key for encryption and decryption!</p>
+      <p style="margin-top: 10px; font-size: 10px; color: #999;">Created by Anant Shukla</p>
+    </div>
+  </div>
+
+  <script>
+    // Encryption logic
+    function caesarCipher(text, key, isEncrypt) {
+      const shift = isEncrypt ? key : -key;
+      let result = '';
+      
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const code = char.charCodeAt(0);
+        
+        if (char >= 'a' && char <= 'z') {
+          const shifted = ((code - 97 + shift) % 26 + 26) % 26;
+          result += String.fromCharCode(shifted + 97);
+        } else if (char >= 'A' && char <= 'Z') {
+          const shifted = ((code - 65 + shift) % 26 + 26) % 26;
+          result += String.fromCharCode(shifted + 65);
+        } else if (char >= '0' && char <= '9') {
+          const shifted = ((code - 48 + shift) % 10 + 10) % 10;
+          result += String.fromCharCode(shifted + 48);
+        } else if (char === ' ') {
+          result += char;
+        } else {
+          const encrypted = code ^ (key % 256);
+          result += String.fromCharCode(encrypted);
+        }
+      }
+      
+      return result;
+    }
+
+    function encryptBytes(bytes, key) {
+      const result = new Uint8Array(bytes.length);
+      for (let i = 0; i < bytes.length; i++) {
+        result[i] = bytes[i] ^ (key % 256);
+      }
+      return result;
+    }
+
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+      });
+    });
+
+    // Text encryption
+    const inputText = document.getElementById('inputText');
+    const keyInput = document.getElementById('keyInput');
+    const outputText = document.getElementById('outputText');
+    const encryptBtn = document.getElementById('encryptBtn');
+    const decryptBtn = document.getElementById('decryptBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    encryptBtn.addEventListener('click', () => {
+      const text = inputText.value;
+      const key = parseInt(keyInput.value);
+      
+      if (!text) {
+        showNotification('Please enter text to encrypt', 'error');
+        return;
+      }
+      
+      if (isNaN(key) || key === 0) {
+        showNotification('Please enter a valid numeric key', 'error');
+        return;
+      }
+      
+      const encrypted = caesarCipher(text, key, true);
+      outputText.value = encrypted;
+      showNotification('Text encrypted successfully!', 'success');
+    });
+
+    decryptBtn.addEventListener('click', () => {
+      const text = inputText.value;
+      const key = parseInt(keyInput.value);
+      
+      if (!text) {
+        showNotification('Please enter text to decrypt', 'error');
+        return;
+      }
+      
+      if (isNaN(key) || key === 0) {
+        showNotification('Please enter a valid numeric key', 'error');
+        return;
+      }
+      
+      const decrypted = caesarCipher(text, key, false);
+      outputText.value = decrypted;
+      showNotification('Text decrypted successfully!', 'success');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      inputText.value = '';
+      outputText.value = '';
+      showNotification('Cleared!', 'success');
+    });
+
+    copyBtn.addEventListener('click', () => {
+      if (!outputText.value) {
+        showNotification('Nothing to copy', 'error');
+        return;
+      }
+      
+      outputText.select();
+      document.execCommand('copy');
+      showNotification('Copied to clipboard!', 'success');
+    });
+
+    // File encryption
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileKeyInput = document.getElementById('fileKeyInput');
+    const encryptFileBtn = document.getElementById('encryptFileBtn');
+    const decryptFileBtn = document.getElementById('decryptFileBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const fileResult = document.getElementById('fileResult');
+
+    let selectedFile = null;
+
+    fileInput.addEventListener('change', (e) => {
+      selectedFile = e.target.files[0];
+      if (selectedFile) {
+        const sizeMB = (selectedFile.size / (1024 * 1024)).toFixed(2);
+        fileInfo.innerHTML = `<strong>${selectedFile.name}</strong><br>Size: ${sizeMB} MB | Type: ${selectedFile.type || 'Unknown'}`;
+      } else {
+        fileInfo.textContent = 'No file selected';
+      }
+      fileResult.innerHTML = '';
+    });
+
+    encryptFileBtn.addEventListener('click', () => processFile(true));
+    decryptFileBtn.addEventListener('click', () => processFile(false));
+
+    function processFile(isEncrypt) {
+      if (!selectedFile) {
+        showNotification('Please select a file first', 'error');
+        return;
+      }
+      
+      const key = parseInt(fileKeyInput.value);
+      if (isNaN(key) || key === 0) {
+        showNotification('Please enter a valid numeric key', 'error');
+        return;
+      }
+      
+      const reader = new FileReader();
+      
+      reader.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          updateProgress(percent);
+        }
+      };
+      
+      reader.onload = (e) => {
+        const arrayBuffer = e.target.result;
+        const bytes = new Uint8Array(arrayBuffer);
+        
+        const isTextFile = selectedFile.type.startsWith('text/') || 
+                           selectedFile.name.match(/\.(txt|json|csv|md|html|css|js)$/i);
+        
+        let processedData;
+        let newFileName;
+        let mimeType;
+        
+        if (isTextFile) {
+          const text = new TextDecoder().decode(bytes);
+          const processedText = caesarCipher(text, key, isEncrypt);
+          processedData = new TextEncoder().encode(processedText);
+          
+          if (isEncrypt) {
+            newFileName = selectedFile.name + '.enc';
+          } else {
+            newFileName = selectedFile.name.replace(/\.(enc|dec)$/i, '');
+          }
+          mimeType = 'text/plain';
+        } else {
+          processedData = encryptBytes(bytes, key);
+          
+          if (isEncrypt) {
+            newFileName = selectedFile.name + '.enc';
+          } else {
+            newFileName = selectedFile.name.replace(/\.(enc|dec)$/i, '');
+          }
+          mimeType = selectedFile.type || 'application/octet-stream';
+        }
+        
+        const blob = new Blob([processedData], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        
+        fileResult.innerHTML = `
+          <div class="success-message">
+            <p>✅ File ${isEncrypt ? 'encrypted' : 'decrypted'} successfully!</p>
+            <a href="${url}" download="${newFileName}" class="btn btn-primary" style="text-decoration: none; display: inline-block;">
+              💾 Download ${newFileName}
+            </a>
+          </div>
+        `;
+        
+        updateProgress(100);
+        setTimeout(() => {
+          progressBar.style.display = 'none';
+        }, 1000);
+        
+        showNotification(`File ${isEncrypt ? 'encrypted' : 'decrypted'} successfully!`, 'success');
+      };
+      
+      reader.onerror = () => {
+        showNotification('Error reading file', 'error');
+        progressBar.style.display = 'none';
+      };
+      
+      progressBar.style.display = 'block';
+      updateProgress(0);
+      reader.readAsArrayBuffer(selectedFile);
+    }
+
+    function updateProgress(percent) {
+      progressFill.style.width = percent + '%';
+      progressText.textContent = percent + '%';
+    }
+
+    function showNotification(message, type = 'info') {
+      const existing = document.querySelector('.notification');
+      if (existing) existing.remove();
+      
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => notification.classList.add('show'), 10);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
